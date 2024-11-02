@@ -8,11 +8,25 @@
 
 /* Begin PBXFileReference section */
 		045090BF2CD60D3000D25E08 /* MarvelUnbound.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MarvelUnbound.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04A528722CD6133D00C6E9AE /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		04A528752CD615DD00C6E9AE /* Exceptions for "MarvelUnbound" folder in "MarvelUnbound" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Configuration/Info.plist,
+			);
+			target = 045090BE2CD60D3000D25E08 /* MarvelUnbound */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		045090C12CD60D3000D25E08 /* MarvelUnbound */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04A528752CD615DD00C6E9AE /* Exceptions for "MarvelUnbound" folder in "MarvelUnbound" target */,
+			);
 			path = MarvelUnbound;
 			sourceTree = "<group>";
 		};
@@ -127,6 +141,7 @@
 /* Begin XCBuildConfiguration section */
 		045090CB2CD60D3200D25E08 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04A528722CD6133D00C6E9AE /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -190,6 +205,7 @@
 		};
 		045090CC2CD60D3200D25E08 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04A528722CD6133D00C6E9AE /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -251,9 +267,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MarvelUnbound/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"MarvelUnbound/Resources/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MarvelUnbound/Configuration/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -279,9 +296,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MarvelUnbound/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"MarvelUnbound/Resources/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MarvelUnbound/Configuration/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
