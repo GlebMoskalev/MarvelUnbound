@@ -35,10 +35,11 @@ extension Endpoint{
     }
     
     var queryItems: [URLQueryItem]? {
-        guard let privateKey = Bundle.main.object(forInfoDictionaryKey: "PRIVATE_KEY") as? String else {
+        guard let privateKey = Bundle.main.object(forInfoDictionaryKey: "PRIVATE_KEY") as? String,
+              let publicKey = Bundle.main.object(forInfoDictionaryKey: "PUBLIC_KEY") as? String
+        else {
             return nil
         }
-        let publicKey = "3ee4acd1209f85fdd57e550fd2926148"
         let ts = String(Int(Date().timeIntervalSince1970))
         let hashInput = ts + privateKey + publicKey
         let hash = Insecure.MD5.hash(data: hashInput.data(using: .utf8)!).map { String(format: "%02hhx", $0) }.joined()

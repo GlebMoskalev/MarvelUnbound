@@ -7,17 +7,14 @@
 
 import Foundation
 
-protocol CharactersServiceable{
-    func getCharacterId(id: Int) async -> Swift.Result<CharactersResponse, RequestError>
-    func getCharacters() async -> Swift.Result<CharactersResponse, RequestError>
-}
-
-struct CharactersService: HTTPClient, CharactersServiceable{
-    func getCharacterId(id: Int) async -> Swift.Result<CharactersResponse, RequestError> {
-        return await sendRequest(endpoint: CharactersEndpoint.characterId(id: id), responseModel: CharactersResponse.self)
+struct CharactersService: HTTPClient, EntityServiceable{
+    typealias Entity = Character
+    
+    var endpointForAll: Endpoint{
+        return CharactersEndpoint.characters
     }
     
-    func getCharacters() async -> Swift.Result<CharactersResponse, RequestError> {
-        return await sendRequest(endpoint: CharactersEndpoint.characters, responseModel: CharactersResponse.self)
+    func endpointForId(_ id: Int) -> any Endpoint {
+        return CharactersEndpoint.characterId(id: id)
     }
 }

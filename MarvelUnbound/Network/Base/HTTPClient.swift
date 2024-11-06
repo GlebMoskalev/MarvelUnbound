@@ -33,19 +33,10 @@ extension HTTPClient{
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request, delegate: nil)
-            
-//            do {
-//                let decodeResponse = try JSONDecoder().decode(responseModel, from: data)
-//                return .success(decodeResponse)
-//            } catch let decodingError {
-//                print("Decoding error: \(decodingError)")
-//                return .failure(.decode)
-//            }
-            
+
             guard let response = response as? HTTPURLResponse else{
                 return .failure(.noResponse)
             }
-            
             switch response.statusCode{
             case 200...299:
                 guard let decodeResponse = try? JSONDecoder().decode(responseModel, from: data) else {

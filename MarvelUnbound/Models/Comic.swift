@@ -7,8 +7,6 @@
 
 import Foundation
 
-typealias ComicsResponse = BaseResponse<Comic>
-
 struct Comic: Codable {
     let id, digitalID: Int
     let title: String
@@ -48,6 +46,7 @@ struct Comic: Codable {
         case thumbnail, images, creators, characters, stories, events
     }
 }
+
 struct CreatorItem: Codable {
     let resourceURI: String
     let name: String

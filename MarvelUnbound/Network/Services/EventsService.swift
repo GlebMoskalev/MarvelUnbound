@@ -7,17 +7,14 @@
 
 import Foundation
 
-protocol EventsServiceable{
-    func getEventId(id: Int) async -> Swift.Result<EventsResponse, RequestError>
-    func getEvents() async -> Swift.Result<EventsResponse, RequestError>
-}
-
-struct EventsService: HTTPClient, EventsServiceable{
-    func getEventId(id: Int) async -> Swift.Result<EventsResponse, RequestError> {
-        return await sendRequest(endpoint: EventsEndpoint.eventId(id: id), responseModel: EventsResponse.self)
+struct EventsService: HTTPClient, EntityServiceable{
+    typealias Entity = Event
+    
+    var endpointForAll: Endpoint{
+        return EventsEndpoint.events
     }
     
-    func getEvents() async -> Swift.Result<EventsResponse, RequestError> {
-        return await sendRequest(endpoint: EventsEndpoint.events, responseModel: EventsResponse.self)
+    func endpointForId(_ id: Int) -> any Endpoint {
+        return EventsEndpoint.eventId(id: id)
     }
 }

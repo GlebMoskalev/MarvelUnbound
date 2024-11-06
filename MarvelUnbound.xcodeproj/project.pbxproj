@@ -43,11 +43,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04073AF42CD63B2C003E5030 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				04A528722CD6133D00C6E9AE /* Secrets.xcconfig */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		045090B62CD60D3000D25E08 = {
 			isa = PBXGroup;
 			children = (
 				045090C12CD60D3000D25E08 /* MarvelUnbound */,
 				045090C02CD60D3000D25E08 /* Products */,
+				04073AF42CD63B2C003E5030 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -141,7 +150,8 @@
 /* Begin XCBuildConfiguration section */
 		045090CB2CD60D3200D25E08 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04A528722CD6133D00C6E9AE /* Secrets.xcconfig */;
+			baseConfigurationReferenceAnchor = 045090C12CD60D3000D25E08 /* MarvelUnbound */;
+			baseConfigurationReferenceRelativePath = Configuration/Secrets.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -205,7 +215,8 @@
 		};
 		045090CC2CD60D3200D25E08 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04A528722CD6133D00C6E9AE /* Secrets.xcconfig */;
+			baseConfigurationReferenceAnchor = 045090C12CD60D3000D25E08 /* MarvelUnbound */;
+			baseConfigurationReferenceRelativePath = Configuration/Secrets.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -276,6 +287,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -305,6 +317,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

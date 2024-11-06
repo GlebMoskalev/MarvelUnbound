@@ -7,8 +7,6 @@
 
 import Foundation
 
-typealias EventsResponse = BaseResponse<Event>
-
 struct Event: Codable {
     let id: Int
     let title: String

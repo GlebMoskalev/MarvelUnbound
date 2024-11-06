@@ -7,8 +7,6 @@
 
 import Foundation
 
-typealias CharactersResponse = BaseResponse<Character>
-
 struct Character: Codable {
     let id: Int
     let name, description: String

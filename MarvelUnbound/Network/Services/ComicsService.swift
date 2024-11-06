@@ -7,17 +7,14 @@
 
 import Foundation
 
-protocol ComicsServiceable{
-    func getComicId(id: Int) async -> Swift.Result<ComicsResponse, RequestError>
-    func getComics() async -> Swift.Result<ComicsResponse, RequestError>
-}
-
-struct ComicsService: HTTPClient, ComicsServiceable{
-    func getComicId(id: Int) async -> Swift.Result<ComicsResponse, RequestError> {
-        return await sendRequest(endpoint: ComicsEndpoint.comicId(id: id), responseModel: ComicsResponse.self)
+struct ComicsService: HTTPClient, EntityServiceable{
+    typealias Entity = Comic
+    
+    var endpointForAll: Endpoint{
+        return ComicsEndpoint.comics
     }
     
-    func getComics() async -> Swift.Result<ComicsResponse, RequestError> {
-        return await sendRequest(endpoint: ComicsEndpoint.comics, responseModel: ComicsResponse.self)
+    func endpointForId(_ id: Int) -> any Endpoint {
+        return ComicsEndpoint.comicId(id: id)
     }
 }
