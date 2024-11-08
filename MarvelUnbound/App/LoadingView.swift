@@ -9,10 +9,11 @@ import SwiftUI
 
 struct LoadingView: View {
     @State private var animation = false
+    let sizeText: CGFloat
     
     var body: some View {
         Text("Marvel unbound")
-            .font(Font.customFont(.bangers, style: .regular, size: 30))
+            .font(Font.customFont(.bangers, style: .regular, size: sizeText))
             .foregroundStyle(
                 LinearGradient(
                     colors: [
@@ -54,5 +55,5 @@ struct LoadingView: View {
 }
 
 #Preview {
-    LoadingView()
+    LoadingView(sizeText: 30)
 }

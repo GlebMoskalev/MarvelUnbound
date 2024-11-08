@@ -7,9 +7,14 @@
 
 import SwiftUI
 
+
+// TODO: когда выбираешь к примеру A-Z происходит загрузка, если не дождаться загрузки и выбрать Z-A то сначала загрузится A-Z, а только потом начнет грузиться Z-A
 struct CharacterView: View {
     @State var selectedSortSelection: SortSelection = .popular
     @State var characters: [Character] = []
+    @State var charactersService = CharactersService()
+    @State var isLoadingMore = false
+//    @State var isEverythingLoaded = false
     
     var body: some View {
         BackToTopScrollView{ _ in
@@ -25,7 +30,7 @@ struct CharacterView: View {
                 if characters.isEmpty{
                     HStack{
                         Spacer()
-                        LoadingView()
+                        LoadingView(sizeText: 30)
                         Spacer()
                     }.padding(.top, UIScreen.main.bounds.height / 3)
                 }
@@ -34,19 +39,58 @@ struct CharacterView: View {
                     CardCharacter(character: character)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
+                
+                if selectedSortSelection != .popular && !characters.isEmpty && !isLoadingMore{
+                    Button{
+                        Task(priority: .medium){
+                            isLoadingMore = true
+                            await loadMoreCharacters()
+                            isLoadingMore = false
+                        }
+                    } label: {
+                        Text("Load More")
+                            .foregroundStyle(.white)
+                            .font(Font.customFont(.inter, style: .medium, size: 15))
+                            .padding(.horizontal, 15)
+                            .padding(.vertical, 9)
+                            .background(.black)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        
+                    }
+                } else if isLoadingMore{
+                    LoadingView(sizeText: 20)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
             }
-            Spacer()
         }
         .task {
             await getAllCharacters()
         }
     }
     
-    func getAllCharacters() async {
-        let response = await CharactersService(sortSelection: selectedSortSelection).getAllEntities()
+    private func getAllCharacters() async {
+        charactersService.sortSelection = selectedSortSelection
+        let response = await charactersService.getAllEntities()
         switch response {
         case .success(let success):
             characters = success.data.results
+        case .failure:
+            characters = []
+            print("Ошибка")
+        }
+    }
+    
+    private func loadMoreCharacters() async {
+        charactersService.increaseOffset()
+        let response = await charactersService.getAllEntities()
+        switch response {
+        case .success(let success):
+//            if success.data.results.isEmpty{
+//                isEverythingLoaded = true
+//                return
+//            }
+            characters += success.data.results
         case .failure:
             characters = []
             print("Ошибка")

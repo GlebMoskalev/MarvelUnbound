@@ -16,6 +16,8 @@ protocol Endpoint{
     var header: [String: String]? { get }
     var queryItems: [URLQueryItem]? { get }
     var sortSelection: SortSelection? { get }
+    var offset: Int { get }
+    var limit: Int { get }
 }
 
 extension Endpoint{
@@ -48,6 +50,8 @@ extension Endpoint{
             URLQueryItem(name: "apikey", value: publicKey),
             URLQueryItem(name: "ts", value: ts),
             URLQueryItem(name: "hash", value: hash),
+            URLQueryItem(name: "offset", value: "\(offset)"), // Добавляем offset
+            URLQueryItem(name: "limit", value: "\(limit)")  
         ]
         
         if let sortSelection = self.sortSelection,

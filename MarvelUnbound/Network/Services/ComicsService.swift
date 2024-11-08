@@ -11,6 +11,8 @@ struct ComicsService: HTTPClient, EntityServiceable{
     typealias Entity = Comic
     
     var sortSelection: SortSelection
+    private var offset: Int = 0
+    private var limit: Int = 20
     
     init(sortSelection: SortSelection = .popular) {
         self.sortSelection = sortSelection
@@ -18,7 +20,7 @@ struct ComicsService: HTTPClient, EntityServiceable{
     
     
     var endpointForAll: Endpoint{
-        return ComicsEndpoint.comics(sortSelection: sortSelection)
+        return ComicsEndpoint.comics(sortSelection: sortSelection, offset: offset, limit: limit)
     }
     
     func endpointForId(_ id: Int) -> any Endpoint {
@@ -27,5 +29,14 @@ struct ComicsService: HTTPClient, EntityServiceable{
     
     func getPopularIds() -> [Int]? {
         return getPopularDataIds()?.comicIds
+    }
+    
+    mutating func increaseOffset() {
+        let currentEndpoint = ComicsEndpoint.comics(sortSelection: sortSelection, offset: offset, limit: limit)
+        let updatedEndpoint = ComicsEndpoint.increaseOffsetForEndpoint(endpoint: currentEndpoint)
+        
+        if case let ComicsEndpoint.comics(_, newOffset, _) = updatedEndpoint {
+            self.offset = newOffset
+        }
     }
 }

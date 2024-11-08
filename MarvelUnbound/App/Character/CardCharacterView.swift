@@ -28,7 +28,7 @@ struct CardCharacter: View {
             AsyncImage(url: URL(string: character.thumbnail.path + "/standard_xlarge." + character.thumbnail.thumbnailExtension)) { image in
                 image
             } placeholder: {
-                LoadingView()
+                LoadingView(sizeText: 25)
             }
             
             VStack(spacing: 0){

@@ -32,8 +32,10 @@ private struct SortSelectionButton: View {
     
     var body: some View {
         Button{
-            selected = selection
-            action()
+            if selected != selection{
+                selected = selection
+                action()
+            }
         } label: {
             Text(selection.rawValue)
                 .font(Font.customFont(.roboto, style: .bold, size: 20))

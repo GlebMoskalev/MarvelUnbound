@@ -8,7 +8,7 @@
 import Foundation
 
 enum CharactersEndpoint{
-    case characters(sortSelection: SortSelection?)
+    case characters(sortSelection: SortSelection?, offset: Int, limit: Int)
     case characterId(id: Int)
 }
 
@@ -24,10 +24,37 @@ extension CharactersEndpoint: Endpoint{
     
     var sortSelection: SortSelection? {
         switch self {
-        case .characters(let sort):
+        case .characters(let sort, _, _):
             return sort
         case .characterId:
             return nil
+        }
+    }
+    
+    var offset: Int {
+        switch self {
+        case .characters(_, let offset, _):
+            return offset
+        default:
+            return 0
+        }
+    }
+    
+    var limit: Int {
+        switch self {
+        case .characters(_, _, let limit):
+            return limit
+        default:
+            return 20
+        }
+    }
+    
+    static func increaseOffsetForEndpoint(endpoint: CharactersEndpoint) -> CharactersEndpoint {
+        switch endpoint {
+        case .characters(let sortSelection, let offset, let limit):
+            return .characters(sortSelection: sortSelection, offset: offset + limit, limit: limit)
+        default:
+            return endpoint
         }
     }
 }
