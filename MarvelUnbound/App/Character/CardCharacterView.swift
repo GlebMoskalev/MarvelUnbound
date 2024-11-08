@@ -10,9 +10,26 @@ import SwiftUI
 struct CardCharacter: View {
     let character: Character
     
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+    
+    private let displayDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, MMM d, yyyy"
+        return formatter
+    }()
+    
     var body: some View {
         HStack(spacing: 0){
-            AsyncImage(url: URL(string: character.thumbnail.path + "/standard_xlarge." + character.thumbnail.thumbnailExtension))
+            AsyncImage(url: URL(string: character.thumbnail.path + "/standard_xlarge." + character.thumbnail.thumbnailExtension)) { image in
+                image
+            } placeholder: {
+                LoadingView()
+            }
             
             VStack(spacing: 0){
                 VStack(spacing: 0){
@@ -46,21 +63,31 @@ struct CardCharacter: View {
                 .padding(.top, 20)
                 
                 if character.comics.items.count != 0{
-                    HStack(spacing: 0){
-                        Text("Comics")
+                    VStack(spacing: 0){
+                        Text("Comics:")
                             .font(Font.customFont(.inter, style: .medium, size: 10))
                             .padding(.top, 10)
-                        Spacer()
-                    }
-                    
-                    let countComics = character.description.isEmpty ? 3 : 2
-                    ForEach(character.comics.items.prefix(countComics), id: \.name){ comic in
-                        HStack(spacing: 0){
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        ForEach(character.comics.items.prefix(2), id: \.name){ comic in
                             Text("•\(comic.name)")
                                 .font(Font.customFont(.inter, style: .light, size: 8))
-                            Spacer()
+                                .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
+                }
+                
+                VStack(spacing: 0){
+                    Text("Modified:")
+                        .font(Font.customFont(.inter, style: .medium, size: 10))
+                        .padding(.top, 10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    let date = dateFormatter.date(from: character.modified)
+                    Text(displayDateFormatter.string(from: date ?? Date()))
+                        .font(Font.customFont(.inter, style: .light, size: 8))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
                 }
                 
                 Spacer()
@@ -110,7 +137,7 @@ private struct CardCharacter_Preview: View {
     }
     
     func getCharacter() async {
-        let response = await charactersService.getEntityById(id: 1010744)
+        let response = await charactersService.getEntityById(id: 1010338)
         switch response{
         case .success(let responseCharacter):
             character = responseCharacter.data.results.first

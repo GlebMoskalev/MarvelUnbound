@@ -9,15 +9,16 @@ import SwiftUI
 
 struct SortView: View {
     @Binding var selected: SortSelection
+    let actionButton: () -> Void
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 20){
-                SortSelectionButton(selection: .popular, selected: $selected)
-                SortSelectionButton(selection: .alphabeticalAscending, selected: $selected)
-                SortSelectionButton(selection: .alphabeticalDescending, selected: $selected)
-                SortSelectionButton(selection: .lastModified, selected: $selected)
-                SortSelectionButton(selection: .firstModified, selected: $selected)
+                SortSelectionButton(selection: .popular, selected: $selected, action: actionButton)
+                SortSelectionButton(selection: .alphabeticalAscending, selected: $selected, action: actionButton)
+                SortSelectionButton(selection: .alphabeticalDescending, selected: $selected, action: actionButton)
+                SortSelectionButton(selection: .lastModified, selected: $selected, action: actionButton)
+                SortSelectionButton(selection: .firstModified, selected: $selected, action: actionButton)
             }
         }
         .padding(.horizontal, 20)
@@ -27,10 +28,12 @@ struct SortView: View {
 private struct SortSelectionButton: View {
     let selection: SortSelection
     @Binding var selected: SortSelection
+    let action: () -> Void
     
     var body: some View {
         Button{
             selected = selection
+            action()
         } label: {
             Text(selection.rawValue)
                 .font(Font.customFont(.roboto, style: .bold, size: 20))
@@ -45,5 +48,7 @@ private struct SortSelectionButton: View {
 
 #Preview {
     @Previewable @State var selectedSortSelection: SortSelection = .popular
-    SortView(selected: $selectedSortSelection)
+    SortView(selected: $selectedSortSelection, actionButton: {
+        
+    })
 }

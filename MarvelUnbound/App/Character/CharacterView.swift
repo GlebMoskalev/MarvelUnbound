@@ -9,21 +9,48 @@ import SwiftUI
 
 struct CharacterView: View {
     @State var selectedSortSelection: SortSelection = .popular
+    @State var characters: [Character] = []
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20){
-            HeaderView()
-            SortView(selected: $selectedSortSelection)
-                .task {
-                    await getAllCharacters()
+        BackToTopScrollView{ _ in
+            VStack(alignment: .leading, spacing: 20){
+                HeaderView()
+                SortView(selected: $selectedSortSelection, actionButton: {
+                    Task(priority: .medium){
+                        self.characters = []
+                        await getAllCharacters()
+                    }
+                })
+                
+                if characters.isEmpty{
+                    HStack{
+                        Spacer()
+                        LoadingView()
+                        Spacer()
+                    }.padding(.top, UIScreen.main.bounds.height / 3)
                 }
+                
+                ForEach(characters, id: \.id) { character in
+                    CardCharacter(character: character)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+            }
             Spacer()
+        }
+        .task {
+            await getAllCharacters()
         }
     }
     
     func getAllCharacters() async {
-        let characters = await CharactersService(sortSelection: .popular).getAllEntities()
-        print(characters)
+        let response = await CharactersService(sortSelection: selectedSortSelection).getAllEntities()
+        switch response {
+        case .success(let success):
+            characters = success.data.results
+        case .failure:
+            characters = []
+            print("Ошибка")
+        }
     }
 }
 
