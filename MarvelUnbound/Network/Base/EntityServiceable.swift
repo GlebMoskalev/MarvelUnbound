@@ -9,18 +9,37 @@ import Foundation
 
 protocol EntityServiceable {
     associatedtype Entity: Codable
-    
     var endpointForAll: Endpoint { get }
+    var sortSelection: SortSelection { get }
     func endpointForId(_ id: Int) -> Endpoint
-    
     func getEntityById(id: Int) async -> Swift.Result<BaseResponse<Entity>, RequestError>
     func getAllEntities() async -> Swift.Result<BaseResponse<Entity>, RequestError>
     func getEntitiesByIds(ids: [Int]) async -> [Entity]
+    func getPopularIds() -> [Int]?
 }
 
 
 extension EntityServiceable where Self: HTTPClient{
     func getAllEntities() async -> Swift.Result<BaseResponse<Entity>, RequestError>{
+        if sortSelection == .popular, let popularIds = getPopularIds(){
+            let popularEntities = await getEntitiesByIds(ids: popularIds)
+            let response = BaseResponse<Entity>(
+                code: 200,
+                status: "Ok",
+                copyright: "© 2024 MARVEL",
+                attributionText: "Data provided by Marvel. © 2024 MAR",
+                attributionHTML: "<a href=\"http://marvel.com\">Data provided by Marvel. © 2024 MARVEL</a>",
+                etag: "popular_response_\(Date().timeIntervalSince1970)",
+                data: DataContainer(
+                    offset: 0,
+                    limit: popularEntities.count,
+                    total: popularEntities.count,
+                    count: popularEntities.count,
+                    results: popularEntities)
+            )
+            return .success(response)
+        }
+        
         return await sendRequest(endpoint: endpointForAll, responseModel: BaseResponse<Entity>.self)
     }
     

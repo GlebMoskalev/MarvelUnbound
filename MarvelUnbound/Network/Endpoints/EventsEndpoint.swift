@@ -8,7 +8,7 @@
 import Foundation
 
 enum EventsEndpoint{
-    case events
+    case events(sortSelection: SortSelection?)
     case eventId(id: Int)
 }
 
@@ -19,6 +19,15 @@ extension EventsEndpoint: Endpoint{
             return "/v1/public/events"
         case .eventId(let id):
             return "v1/public/events\(id)"
+        }
+    }
+    
+    var sortSelection: SortSelection? {
+        switch self {
+        case .events(let sort):
+            return sort
+        case .eventId:
+            return nil
         }
     }
 }

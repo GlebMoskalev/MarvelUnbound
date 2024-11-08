@@ -10,11 +10,21 @@ import Foundation
 struct CharactersService: HTTPClient, EntityServiceable{
     typealias Entity = Character
     
+    var sortSelection: SortSelection
+    
+    init(sortSelection: SortSelection = .popular) {
+        self.sortSelection = sortSelection
+    }
+    
     var endpointForAll: Endpoint{
-        return CharactersEndpoint.characters
+        return CharactersEndpoint.characters(sortSelection: sortSelection)
     }
     
     func endpointForId(_ id: Int) -> any Endpoint {
         return CharactersEndpoint.characterId(id: id)
+    }
+    
+    func getPopularIds() -> [Int]? {
+        return getPopularDataIds()?.characterIds
     }
 }

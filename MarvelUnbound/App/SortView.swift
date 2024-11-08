@@ -7,14 +7,6 @@
 
 import SwiftUI
 
-enum SortSelection: String{
-    case popular = "Popular"
-    case alphabeticalAscending = "A-Z"
-    case alphabeticalDescending = "Z-A"
-    case lastModified = "Last Modified"
-    case firstModified = "First Modified"
-}
-
 struct SortView: View {
     @Binding var selected: SortSelection
     

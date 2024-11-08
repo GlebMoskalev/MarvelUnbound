@@ -15,6 +15,7 @@ protocol Endpoint{
     var method: RequestMethod { get }
     var header: [String: String]? { get }
     var queryItems: [URLQueryItem]? { get }
+    var sortSelection: SortSelection? { get }
 }
 
 extension Endpoint{
@@ -43,10 +44,17 @@ extension Endpoint{
         let ts = String(Int(Date().timeIntervalSince1970))
         let hashInput = ts + privateKey + publicKey
         let hash = Insecure.MD5.hash(data: hashInput.data(using: .utf8)!).map { String(format: "%02hhx", $0) }.joined()
-        return [
+        var items = [
             URLQueryItem(name: "apikey", value: publicKey),
             URLQueryItem(name: "ts", value: ts),
-            URLQueryItem(name: "hash", value: hash)
+            URLQueryItem(name: "hash", value: hash),
         ]
+        
+        if let sortSelection = self.sortSelection,
+           sortSelection != .popular {
+            items.append(URLQueryItem(name: "orderBy", value: sortSelection.orderByValue))
+        }
+        
+        return items
     }
 }

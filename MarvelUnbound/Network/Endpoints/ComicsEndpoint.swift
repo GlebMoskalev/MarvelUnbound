@@ -8,11 +8,20 @@
 import Foundation
 
 enum ComicsEndpoint{
-    case comics
+    case comics(sortSelection: SortSelection?)
     case comicId(id: Int)
 }
 
 extension ComicsEndpoint: Endpoint{
+    var sortSelection: SortSelection? {
+        switch self {
+        case .comics(let sort):
+            return sort
+        case .comicId:
+            return nil
+        }
+    }
+    
     var path: String{
         switch self{
         case .comics:

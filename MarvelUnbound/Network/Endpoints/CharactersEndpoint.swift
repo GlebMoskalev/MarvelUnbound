@@ -8,7 +8,7 @@
 import Foundation
 
 enum CharactersEndpoint{
-    case characters
+    case characters(sortSelection: SortSelection?)
     case characterId(id: Int)
 }
 
@@ -19,6 +19,15 @@ extension CharactersEndpoint: Endpoint{
             return "/v1/public/characters"
         case .characterId(let id):
             return "/v1/public/characters/\(id)"
+        }
+    }
+    
+    var sortSelection: SortSelection? {
+        switch self {
+        case .characters(let sort):
+            return sort
+        case .characterId:
+            return nil
         }
     }
 }

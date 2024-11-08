@@ -53,8 +53,8 @@ struct CardCharacter: View {
                         Spacer()
                     }
                     
-                    
-                    ForEach(character.comics.items.prefix(2), id: \.name){ comic in
+                    let countComics = character.description.isEmpty ? 3 : 2
+                    ForEach(character.comics.items.prefix(countComics), id: \.name){ comic in
                         HStack(spacing: 0){
                             Text("•\(comic.name)")
                                 .font(Font.customFont(.inter, style: .light, size: 8))
@@ -110,12 +110,13 @@ private struct CardCharacter_Preview: View {
     }
     
     func getCharacter() async {
-        let response = await charactersService.getEntityById(id: 1017108)
+        let response = await charactersService.getEntityById(id: 1010744)
         switch response{
         case .success(let responseCharacter):
             character = responseCharacter.data.results.first
-        case .failure:
+        case .failure(let e):
             character = nil
+            print(e)
         }
     }
 }

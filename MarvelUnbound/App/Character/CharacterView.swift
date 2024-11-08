@@ -14,10 +14,20 @@ struct CharacterView: View {
         VStack(alignment: .leading, spacing: 20){
             HeaderView()
             SortView(selected: $selectedSortSelection)
+                .task {
+                    await getAllCharacters()
+                }
             Spacer()
         }
     }
+    
+    func getAllCharacters() async {
+        let characters = await CharactersService(sortSelection: .popular).getAllEntities()
+        print(characters)
+    }
 }
+
+
 
 struct HeaderView: View {
     var body: some View {
