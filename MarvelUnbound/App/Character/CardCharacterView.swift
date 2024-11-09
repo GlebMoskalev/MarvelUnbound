@@ -95,8 +95,8 @@ struct CardCharacter: View {
                 HStack(spacing: 0){
                     Spacer()
                     
-                    Button{
-                        print("view")
+                    NavigationLink{
+                        CharacterDetailView(character: character)
                     } label: {
                         HStack(spacing: 0){
                             Text("More info")
@@ -106,6 +106,7 @@ struct CardCharacter: View {
                         }
                         .foregroundStyle(.black)
                     }
+
                 }
                 .padding(.bottom, 5)
                 

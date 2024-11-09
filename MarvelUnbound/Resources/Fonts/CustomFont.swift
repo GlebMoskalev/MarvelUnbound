@@ -27,8 +27,5 @@ extension Font {
         return Font.custom(fontName, size: size)
     }
 
-    static let primaryCharacterName = Font.customFont(.inter, style: .bold, size: 30)
-    static let secondaryCharacterName = Font.customFont(.inter, style: .medium, size: 17)
-    static let descriptionCharacter = Font.customFont(.inter, style: .regular, size: 15)
     static let sectionTitle = Font.customFont(.inter, style: .semiBold, size: 20)
 }

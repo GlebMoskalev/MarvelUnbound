@@ -11,7 +11,7 @@ import SwiftUI
 struct MarvelUnboundApp: App {
     var body: some Scene {
         WindowGroup {
-            CharacterView()
+            CharactersView()
         }
     }
 }
