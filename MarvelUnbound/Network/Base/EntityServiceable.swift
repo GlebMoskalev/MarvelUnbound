@@ -10,7 +10,7 @@ import Foundation
 protocol EntityServiceable {
     associatedtype Entity: Codable
     var endpointForAll: Endpoint { get }
-    var sortSelection: SortSelection { get }
+    var sortSelection: SortSelection { get set }
     func endpointForId(_ id: Int) -> Endpoint
     func getEntityById(id: Int) async -> Swift.Result<BaseResponse<Entity>, RequestError>
     func getAllEntities() async -> Swift.Result<BaseResponse<Entity>, RequestError>

@@ -28,7 +28,12 @@ struct CardCharacter: View {
             AsyncImage(url: URL(string: character.thumbnail.path + "/standard_xlarge." + character.thumbnail.thumbnailExtension)) { image in
                 image
             } placeholder: {
-                LoadingView(sizeText: 25)
+                ZStack(alignment: .center){
+                    UnevenRoundedRectangle(topLeadingRadius: 15, bottomLeadingRadius: 15)
+                        .frame(width: 200, height: 200)
+                    
+                    LoadingView(sizeText: 25)
+                }
             }
             
             VStack(spacing: 0){

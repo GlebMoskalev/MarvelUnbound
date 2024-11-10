@@ -7,11 +7,12 @@
 
 import Foundation
 
-struct CharactersService: HTTPClient, EntityServiceable{
+@Observable
+class CharactersService: HTTPClient, EntityServiceable{
     typealias Entity = Character
     
     var sortSelection: SortSelection
-    private var offset: Int = 0
+    var offset: Int = 0
     private var limit: Int = 20
     
     init(sortSelection: SortSelection = .popular) {
@@ -30,7 +31,7 @@ struct CharactersService: HTTPClient, EntityServiceable{
         return getPopularDataIds()?.characterIds
     }
     
-    mutating func increaseOffset() {
+    func increaseOffset() {
         let currentEndpoint = CharactersEndpoint.characters(sortSelection: sortSelection, offset: offset, limit: limit)
         let updatedEndpoint = CharactersEndpoint.increaseOffsetForEndpoint(endpoint: currentEndpoint)
         

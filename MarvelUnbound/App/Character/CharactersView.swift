@@ -15,16 +15,18 @@ struct CharactersView: View {
     @State var charactersService = CharactersService()
     @State var isLoadingMore = false
     @State var isEverythingLoaded = false
+    @State private var currentTask: Task<Void, Never>?
     
     var body: some View {
         NavigationStack {
             BackToTopScrollView{ _ in
                 VStack(alignment: .leading, spacing: 20){
                     HeaderView()
-                    SortView(selected: $selectedSortSelection, actionButton: {
-                        Task(priority: .medium){
-                            self.characters = []
-                            await getAllCharacters()
+                    SortView(service: $charactersService, actionButton: {
+                        currentTask?.cancel()
+                        self.characters = []
+                        currentTask = Task(priority: .medium){
+                            await loadCharacters(refresh: true)
                         }
                     })
                     
@@ -41,11 +43,12 @@ struct CharactersView: View {
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                     
-                    if selectedSortSelection != .popular && !characters.isEmpty && !isLoadingMore{
+                    if charactersService.sortSelection != .popular && !characters.isEmpty && !isLoadingMore{
                         Button{
-                            Task(priority: .medium){
-                                isLoadingMore = true
-                                await loadMoreCharacters()
+                            currentTask?.cancel()
+                            isLoadingMore = true
+                            currentTask = Task(priority: .medium){
+                                await loadCharacters()
                                 isLoadingMore = false
                             }
                         } label: {
@@ -65,33 +68,37 @@ struct CharactersView: View {
                     }
                 }
             }
-            .task {
-                await getAllCharacters()
+        }
+        .onAppear{
+            currentTask?.cancel()
+            currentTask = Task(priority: .high){
+                await loadCharacters(refresh: true)
             }
         }
+        .onDisappear{
+            currentTask?.cancel()
+        }
     }
-    
-    private func getAllCharacters() async {
-        charactersService.sortSelection = selectedSortSelection
-        let response = await charactersService.getAllEntities()
-        switch response {
-        case .success(let success):
-            characters = success.data.results
-        case .failure:
+    private func loadCharacters(refresh: Bool = false) async{
+        guard !Task.isCancelled else { return }
+        
+        if refresh{
+            charactersService.offset = 0
             characters = []
-            print("Ошибка")
+        } else{
+            charactersService.increaseOffset()
         }
-    }
-    
-    private func loadMoreCharacters() async {
-        charactersService.increaseOffset()
         let response = await charactersService.getAllEntities()
+        guard !Task.isCancelled else { return }
+        
         switch response {
         case .success(let success):
-            if success.data.results.isEmpty{
+            let newCharacters = success.data.results
+            if newCharacters.isEmpty{
                 isEverythingLoaded = true
+            } else{
+                characters.append(contentsOf: newCharacters)
             }
-            characters += success.data.results
         case .failure:
             characters = []
             print("Ошибка")
