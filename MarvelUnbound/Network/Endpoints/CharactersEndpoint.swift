@@ -10,6 +10,7 @@ import Foundation
 enum CharactersEndpoint{
     case characters(sortSelection: SortSelection?, offset: Int, limit: Int)
     case characterId(id: Int)
+    case comicsForCharacter(characterId: Int, offset: Int, limit: Int)
 }
 
 extension CharactersEndpoint: Endpoint{
@@ -19,6 +20,8 @@ extension CharactersEndpoint: Endpoint{
             return "/v1/public/characters"
         case .characterId(let id):
             return "/v1/public/characters/\(id)"
+        case .comicsForCharacter(let characterId, _, _):
+            return "/v1/public/characters/\(characterId)/comics"
         }
     }
     
@@ -26,7 +29,7 @@ extension CharactersEndpoint: Endpoint{
         switch self {
         case .characters(let sort, _, _):
             return sort
-        case .characterId:
+        default:
             return nil
         }
     }
@@ -53,6 +56,8 @@ extension CharactersEndpoint: Endpoint{
         switch endpoint {
         case .characters(let sortSelection, let offset, let limit):
             return .characters(sortSelection: sortSelection, offset: offset + limit, limit: limit)
+        case .comicsForCharacter(let charcterId, let offset, let limit):
+            return .comicsForCharacter(characterId: charcterId, offset: offset + limit, limit: limit)
         default:
             return endpoint
         }

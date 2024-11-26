@@ -26,6 +26,4 @@ extension Font {
         let fontName = font.rawValue + style.rawValue
         return Font.custom(fontName, size: size)
     }
-
-    static let sectionTitle = Font.customFont(.inter, style: .semiBold, size: 20)
 }

@@ -11,7 +11,7 @@ struct BackToTopScrollView<Content: View>: View {
     private let contentView: (ScrollViewProxy) -> Content
     private var invisibleTopViewId: String = "TOP_ID"
     private var coordinateSpaceName: String = "BACK_TO_TOP_SCROLLVIEW"
-    private var minimumScrollOffset: CGFloat = 20
+    private var minimumScrollOffset: CGFloat = 250
     @State private var offset: CGPoint = .zero
     @State private var showBackButton: Bool = false
     

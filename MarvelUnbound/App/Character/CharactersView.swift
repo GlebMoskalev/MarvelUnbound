@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-// TODO: когда выбираешь к примеру A-Z происходит загрузка, если не дождаться загрузки и выбрать Z-A то сначала загрузится A-Z, а только потом начнет грузиться Z-A
 struct CharactersView: View {
     @State var selectedSortSelection: SortSelection = .popular
     @State var characters: [Character] = []
@@ -39,7 +37,7 @@ struct CharactersView: View {
                     }
                     
                     ForEach(characters, id: \.id) { character in
-                        CardCharacter(character: character)
+                        CardCharacter(character: character, characterService: $charactersService)
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                     

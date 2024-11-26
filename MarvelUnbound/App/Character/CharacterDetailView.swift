@@ -10,8 +10,10 @@ import SwiftUI
 struct CharacterDetailView: View {
     @Environment(\.dismiss) var dismiss
     let character: Character
-    var comics: [Comic] = []
-    
+    @State var comics: [Comic] = []
+    @Binding var charactersService: CharactersService
+    @State var isLoadingMoreComics = false
+    @State var currentTaskForComics: Task<Void, Never>?
     
     var body: some View {
         ScrollView{
@@ -46,9 +48,50 @@ struct CharacterDetailView: View {
                 }
                 .padding(.leading, 20)
                 
-                Text(character.description)
-                    .font(Font.customFont(.inter, style: .regular, size: 15))
-                    .padding(20)
+                Text(
+                    character.description.isEmpty
+                    ? "There is no description"
+                    : character.description
+                )
+                .font(Font.customFont(.inter, style: .regular, size: 15))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(20)
+                
+                Text("Comics:")
+                    .font(Font.customFont(.inter, style: .semiBold, size: 20))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding([.leading, .top], 20)
+                
+                ScrollView(.horizontal, showsIndicators: false){
+                    HStack(spacing: 20){
+                        ForEach(comics, id: \.id) { comic in
+                            ComicForCharacterDetailView(comic: comic)
+                        }
+                        
+                        if !isLoadingMoreComics && !comics.isEmpty{
+                            Button{
+                                isLoadingMoreComics = true
+                                currentTaskForComics = Task(priority: .high){
+                                    await loadComics()
+                                    isLoadingMoreComics = false
+                                }
+                            } label: {
+                                Text("Load More")
+                                    .foregroundStyle(.white)
+                                    .font(Font.customFont(.inter, style: .medium, size: 15))
+                                    .padding(.horizontal, 15)
+                                    .padding(.vertical, 9)
+                                    .background(.black)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                
+                            }
+                        } else{
+                            LoadingView(sizeText: 10)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                }
             }
             
             Spacer()
@@ -65,6 +108,32 @@ struct CharacterDetailView: View {
                 }
             }
         }
+        .onAppear{
+            currentTaskForComics = Task(priority: .high){
+                await loadComics(refresh: true)
+            }
+        }
+    }
+    
+    
+    private func loadComics(refresh: Bool = false) async{
+        
+        if refresh{
+            charactersService.comicsOffset = 0
+            comics = []
+        } else{
+            charactersService.increaseComicsOffset(forCharacterId: character.id)
+        }
+        print(charactersService.comicsOffset)
+        let response = await charactersService.getComicsForCharacter(characterId: character.id)
+        switch response {
+        case .success(let success):
+            let newComics = success.data.results
+            comics.append(contentsOf: newComics)
+        case .failure:
+            comics = []
+            print("Ошибка")
+        }
     }
 }
 
@@ -77,7 +146,7 @@ private struct CharacterDetail_Preview: View {
             if let character = character {
                 NavigationStack{
                     NavigationLink{
-                        CharacterDetailView(character: character)
+                        CharacterDetailView(character: character, charactersService: .constant(charactersService))
                     } label: {
                         Text("transition detail")
                     }

@@ -15,7 +15,12 @@ struct ComicForCharacterDetailView: View {
                 AsyncImage(url: URL(string: thumbnail.path + "/portrait_xlarge." + thumbnail.thumbnailExtension)) { image in
                     image
                 } placeholder: {
-                    LoadingView(sizeText: 10)
+                    ZStack(alignment: .center){
+                        UnevenRoundedRectangle(topLeadingRadius: 15, bottomLeadingRadius: 15)
+                            .frame(width: 150, height: 225)
+                        
+                        LoadingView(sizeText: 10)
+                    }
                 }
             }
             
