@@ -31,10 +31,11 @@ class CharactersService: HTTPClient, EntityServiceable{
         return getPopularDataIds()?.characterIds
     }
     
-    func getComicsForCharacter(characterId: Int, limit: Int = 20, offset: Int = 0) async -> Result<BaseResponse<Comic>, RequestError> {
-        let comicsEndpoint = CharactersEndpoint.comicsForCharacter(characterId: characterId, offset: offset, limit: limit)
-        return await sendRequest(endpoint: comicsEndpoint, responseModel: BaseResponse<Comic>.self)
+    func getComicsForCharacter(characterId: Int) async -> Swift.Result<BaseResponse<Comic>, RequestError> {
+        let endpoint = CharactersEndpoint.comicsForCharacter(characterId: characterId, offset: comicsOffset, limit: limit)
+        return await sendRequest(endpoint: endpoint, responseModel: BaseResponse<Comic>.self)
     }
+
     
     func increaseOffset() {
         let currentEndpoint = CharactersEndpoint.characters(sortSelection: sortSelection, offset: offset, limit: limit)
@@ -45,12 +46,7 @@ class CharactersService: HTTPClient, EntityServiceable{
         }
     }
     
-    func increaseComicsOffset(forCharacterId: Int){
-        let currenEndpoint = CharactersEndpoint.comicsForCharacter(characterId: forCharacterId, offset: offset, limit: limit)
-        let updatedEndpoint = CharactersEndpoint.increaseOffsetForEndpoint(endpoint: currenEndpoint)
-        
-        if case let CharactersEndpoint.comicsForCharacter(_, newOffset, _) = updatedEndpoint {
-            self.comicsOffset = newOffset
-        }
+    func increaseComicsOffset(forCharacterId characterId: Int) {
+        comicsOffset += limit
     }
 }

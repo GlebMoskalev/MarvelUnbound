@@ -38,6 +38,8 @@ extension CharactersEndpoint: Endpoint{
         switch self {
         case .characters(_, let offset, _):
             return offset
+        case .comicsForCharacter(_, let offset, _):
+            return offset
         default:
             return 0
         }

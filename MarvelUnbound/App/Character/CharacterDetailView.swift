@@ -14,6 +14,8 @@ struct CharacterDetailView: View {
     @Binding var charactersService: CharactersService
     @State var isLoadingMoreComics = false
     @State var currentTaskForComics: Task<Void, Never>?
+    @State var isAllComicsUploaded = false
+    @State var isNoComics = false
     
     var body: some View {
         ScrollView{
@@ -68,7 +70,10 @@ struct CharacterDetailView: View {
                             ComicForCharacterDetailView(comic: comic)
                         }
                         
-                        if !isLoadingMoreComics && !comics.isEmpty{
+                        if isNoComics{
+                            Text("This character has not appeared in the comics.")
+                                .font(Font.customFont(.inter, style: .light, size: 15))
+                        } else if !isLoadingMoreComics && !comics.isEmpty && !isAllComicsUploaded{
                             Button{
                                 isLoadingMoreComics = true
                                 currentTaskForComics = Task(priority: .high){
@@ -86,6 +91,8 @@ struct CharacterDetailView: View {
                                     .frame(maxWidth: .infinity, alignment: .center)
                                 
                             }
+                        } else if isAllComicsUploaded{
+                            EmptyView()
                         } else{
                             LoadingView(sizeText: 10)
                         }
@@ -117,17 +124,17 @@ struct CharacterDetailView: View {
     
     
     private func loadComics(refresh: Bool = false) async{
-        
         if refresh{
             charactersService.comicsOffset = 0
             comics = []
         } else{
             charactersService.increaseComicsOffset(forCharacterId: character.id)
         }
-        print(charactersService.comicsOffset)
         let response = await charactersService.getComicsForCharacter(characterId: character.id)
         switch response {
         case .success(let success):
+            isAllComicsUploaded = success.data.total >= charactersService.comicsOffset
+            isNoComics = success.data.count == 0
             let newComics = success.data.results
             comics.append(contentsOf: newComics)
         case .failure:

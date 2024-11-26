@@ -11,16 +11,14 @@ struct ComicForCharacterDetailView: View {
     let comic: Comic
     var body: some View {
         VStack(spacing: 0){
-            if let thumbnail = comic.images.first{
-                AsyncImage(url: URL(string: thumbnail.path + "/portrait_xlarge." + thumbnail.thumbnailExtension)) { image in
-                    image
-                } placeholder: {
-                    ZStack(alignment: .center){
-                        UnevenRoundedRectangle(topLeadingRadius: 15, bottomLeadingRadius: 15)
-                            .frame(width: 150, height: 225)
-                        
-                        LoadingView(sizeText: 10)
-                    }
+            AsyncImage(url: URL(string: comic.thumbnail.path + "/portrait_xlarge." + comic.thumbnail.thumbnailExtension)) { image in
+                image
+            } placeholder: {
+                ZStack(alignment: .center){
+                    UnevenRoundedRectangle(topLeadingRadius: 15, bottomLeadingRadius: 15)
+                        .frame(width: 150, height: 225)
+                    
+                    LoadingView(sizeText: 10)
                 }
             }
             
