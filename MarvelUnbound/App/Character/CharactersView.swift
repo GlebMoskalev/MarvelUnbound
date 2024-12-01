@@ -37,7 +37,7 @@ struct CharactersView: View {
                     }
                     
                     ForEach(characters, id: \.id) { character in
-                        CardCharacter(character: character, characterService: $charactersService)
+                        CardCharacterView(viewModel: CardCharacterViewModel(character: character, characterService: charactersService))
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                     

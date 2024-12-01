@@ -1,19 +1,19 @@
 //
-//  CardCharacter.swift
+//  CardCharcterView.swift
 //  MarvelUnbound
 //
-//  Created by Глеб Москалев on 06.11.2024.
+//  Created by Глеб Москалев on 01.12.2024.
 //
+
 
 import SwiftUI
 
-struct CardCharacter: View {
-    let character: Character
-    @Binding var characterService: CharactersService
+struct CardCharacterView: View {
+    @State var viewModel: CardCharacterViewModel
     
     var body: some View {
         HStack(spacing: 0){
-            AsyncImage(url: URL(string: character.thumbnail.path + "/standard_xlarge." + character.thumbnail.thumbnailExtension)) { image in
+            AsyncImage(url: viewModel.thumbnailURL) { image in
                 image
             } placeholder: {
                 ZStack(alignment: .center){
@@ -25,17 +25,12 @@ struct CardCharacter: View {
             }
             
             VStack(spacing: 5){
-                NameView(name: character.name)
-                
-                DescriptionView(description: character.description)
-                
-                ComicsView(comicsResourceItem: character.comics.items)
-                
-                ModifiedView(modified: character.modified)
-                
+                NameView(nameParts: viewModel.nameParts)
+                DescriptionView(description: viewModel.description)
+                ComicsView(comics: viewModel.comics)
+                ModifiedView(modifiedDate: viewModel.modifiedDate)
                 Spacer()
-                
-                MoreButton(moreLink: CharacterDetailView(character: character, charactersService: $characterService))
+                MoreButton(moreLink: CharacterDetailView(character: viewModel.character, charactersService: viewModel.characterService))
                     .padding(.bottom, 5)
                 
 
@@ -50,29 +45,14 @@ struct CardCharacter: View {
 }
 
 private struct ModifiedView: View {
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        return formatter
-    }()
-    
-    private let displayDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMM d, yyyy"
-        return formatter
-    }()
-    
-    let modified: String
+    let modifiedDate: String
     
     var body: some View {
         VStack(spacing: 0){
             Text("Modified:")
                 .font(Font.customFont(.inter, style: .semiBold, size: 12))
                 .frame(maxWidth: .infinity, alignment: .leading)
-            
-            let date = dateFormatter.date(from: modified)
-            Text(displayDateFormatter.string(from: date ?? Date()))
+            Text(modifiedDate)
                 .font(Font.customFont(.inter, style: .light, size: 12))
                 .frame(maxWidth: .infinity, alignment: .leading)
             
@@ -105,17 +85,17 @@ private struct MoreButton: View {
 }
 
 private struct ComicsView: View {
-    let comicsResourceItem: [ResourceItem]
+    let comics: [String]
     
     var body: some View {
-        if comicsResourceItem.count != 0{
+        if !comics.isEmpty{
             VStack(spacing: 0){
                 Text("Comics:")
                     .font(Font.customFont(.inter, style: .semiBold, size: 12))
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
-                ForEach(comicsResourceItem.prefix(2), id: \.name){ comic in
-                    Text("•\(comic.name)")
+                ForEach(comics, id: \.self){ comic in
+                    Text("•\(comic)")
                         .font(Font.customFont(.inter, style: .light, size: 12))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -128,36 +108,26 @@ private struct DescriptionView: View {
     let description: String
     
     var body: some View {
-        Group{
-            if description.isEmpty{
-                Text("There is no description")
-                    .font(Font.customFont(.inter, style: .light, size: 12))
-            } else{
-                Text(description)
-                    .font(Font.customFont(.inter, style: .light, size: 12))
-                    .frame(maxHeight: 40)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        Text(description)
+            .font(Font.customFont(.inter, style: .light, size: 12))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .lineLimit(3)
     }
 }
 
 private struct NameView: View {
-    let name: String
+    let nameParts: (String, String?)
     
     var body: some View {
         VStack(spacing: 0){
-            let nameSplit = name.split(separator: "(")
-            let firstPart = nameSplit[0].trimmingCharacters(in: .whitespaces)
-            Text(firstPart)
+            Text(nameParts.0)
                 .font(Font.customFont(.inter, style: .bold, size: 16))
                 .padding(.top, 8)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
             
-            if nameSplit.count == 2{
-                let secondPart = String(nameSplit[1].dropLast())
+            if let secondPart = nameParts.1{
                 Text(secondPart)
                     .font(Font.customFont(.inter, style: .medium, size: 14))
                     .lineLimit(2)
@@ -174,7 +144,7 @@ private struct CardCharacter_Preview: View {
     var body: some View {
         VStack{
             if let character = character {
-                CardCharacter(character: character, characterService: .constant(charactersService))
+                CardCharacterView(viewModel: CardCharacterViewModel(character: character, characterService: CharactersService()))
             } else {
                 Text("Loading")
             }

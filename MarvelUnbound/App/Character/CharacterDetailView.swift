@@ -11,7 +11,7 @@ struct CharacterDetailView: View {
     @Environment(\.dismiss) var dismiss
     let character: Character
     @State var comics: [Comic] = []
-    @Binding var charactersService: CharactersService
+    let charactersService: CharactersService
     @State var isLoadingMoreComics = false
     @State var currentTaskForComics: Task<Void, Never>?
     @State var isAllComicsUploaded = false
@@ -153,7 +153,7 @@ private struct CharacterDetail_Preview: View {
             if let character = character {
                 NavigationStack{
                     NavigationLink{
-                        CharacterDetailView(character: character, charactersService: .constant(charactersService))
+                        CharacterDetailView(character: character, charactersService: charactersService)
                     } label: {
                         Text("transition detail")
                     }
