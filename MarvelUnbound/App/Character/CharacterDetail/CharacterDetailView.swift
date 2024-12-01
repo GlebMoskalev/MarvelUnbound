@@ -19,12 +19,11 @@ struct CharacterDetailView: View {
                 CharacterDescriptionView(description: viewModel.description)
                 CharacterComicsListView(
                     comics: $viewModel.comics,
-                    isNoComics: viewModel.isNoComics,
-                    isLoadingMoreComics: viewModel.isLoadingMoreComics,
+                    isNoComics: $viewModel.isNoComics,
+                    isLoadingMoreComics: $viewModel.isLoadingMoreComics,
                     isAllComicsUploaded: $viewModel.isAllComicsUploaded,
                     loadMoreAction: {
                         viewModel.isLoadingMoreComics = true
-                        print(viewModel.isLoadingMoreComics)
                         Task(priority: .high){
                             await viewModel.loadComics()
                             viewModel.isLoadingMoreComics = false
@@ -51,13 +50,22 @@ struct CharacterDetailView: View {
                 await viewModel.loadComics(refresh: true)
             }
         }
+        .onChange(of: viewModel.isLoadingMoreComics){
+            print("isLoadingMoreComics \(viewModel.isLoadingMoreComics)")
+        }
+        .onChange(of: viewModel.isAllComicsUploaded){
+            print("isAllComicsUploaded \(viewModel.isAllComicsUploaded)")
+        }
+        .onChange(of: viewModel.isNoComics){
+            print("isAllComicsUploaded \(viewModel.isNoComics)")
+        }
     }
 }
 
 private struct CharacterComicsListView: View{
     @Binding var comics: [Comic]
-    let isNoComics: Bool
-    let isLoadingMoreComics: Bool
+    @Binding var isNoComics: Bool
+    @Binding var isLoadingMoreComics: Bool
     @Binding var isAllComicsUploaded: Bool
     let loadMoreAction: () -> Void
     
@@ -73,7 +81,7 @@ private struct CharacterComicsListView: View{
                     ForEach(comics, id: \.id) { comic in
                         ComicForCharacterDetailView(comic: comic)
                     }
-                    if isNoComics{
+                    if isNoComics && comics.isEmpty{
                         Text("This character has not appeared in the comics.")
                             .font(Font.customFont(.inter, style: .light, size: 15))
                     } else if !isLoadingMoreComics && !comics.isEmpty && !isAllComicsUploaded{
@@ -94,12 +102,6 @@ private struct CharacterComicsListView: View{
                     }
                 }
                 .padding(.horizontal, 20)
-            }
-            .onAppear{
-                print("isLoadingMoreComics:", isLoadingMoreComics)
-                print("isAllComicsUploaded:", isAllComicsUploaded)
-                print("isNoComics:", isNoComics)
-                print("comics count:", comics.count)
             }
         }
     }

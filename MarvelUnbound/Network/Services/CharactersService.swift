@@ -14,7 +14,7 @@ class CharactersService: HTTPClient, EntityServiceable{
     var sortSelection: SortSelection
     var offset: Int = 0
     var comicsOffset: Int = 0
-    private var limit: Int = 20
+    var limit: Int = 20
     init(sortSelection: SortSelection = .popular) {
         self.sortSelection = sortSelection
     }

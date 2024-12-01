@@ -43,19 +43,18 @@ class CharacterDetailModel{
         let response = await charactersService.getComicsForCharacter(characterId: character.id)
         switch response {
         case .success(let success):
-            isAllComicsUploaded = success.data.total >= charactersService.comicsOffset
+            isAllComicsUploaded = success.data.total <= (charactersService.comicsOffset  + charactersService.limit)
+            print(isAllComicsUploaded, success.data.total, charactersService.comicsOffset)
             isNoComics = success.data.count == 0
-            print(success.data.total)
-            print(isAllComicsUploaded)
             let newComics = success.data.results
             DispatchQueue.main.async {
                 self.comics.append(contentsOf: newComics)
             }
-        case .failure:
+        case .failure(let failure):
             DispatchQueue.main.async {
                 self.comics = []
             }
-            print("Ошибка")
+            print(failure)
         }
     }
 }

@@ -39,10 +39,18 @@ extension HTTPClient{
             }
             switch response.statusCode{
             case 200...299:
-                guard let decodeResponse = try? JSONDecoder().decode(responseModel, from: data) else {
+                do {
+                    let decodeResponse = try JSONDecoder().decode(responseModel, from: data)
+                    return .success(decodeResponse)
+                } catch let decodingError {
+                    print("Decoding error: \(decodingError)")
                     return .failure(.decode)
                 }
-                return .success(decodeResponse)
+
+//                guard let decodeResponse = try? JSONDecoder().decode(responseModel, from: data) else {
+//                    return .failure(.decode)
+//                }
+//                return .success(decodeResponse)
             case 401:
                 return .failure(.unauthorized)
             default:

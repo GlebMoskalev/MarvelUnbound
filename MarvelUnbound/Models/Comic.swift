@@ -10,7 +10,7 @@ import Foundation
 struct Comic: Codable {
     let id, digitalID: Int
     let title: String
-    let issueNumber: Int
+    let issueNumber: Double
     let variantDescription: String?  
     let description: String?
     let modified: String
