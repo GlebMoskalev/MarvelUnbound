@@ -11,7 +11,7 @@ import SwiftUI
 
 @Observable
 class CardCharacterViewModel{
-    var thumbnailURL: URL?
+    var imageURL: URL?
     var nameParts: (String, String?)
     var description: String
     var comics: [String]
@@ -23,7 +23,7 @@ class CardCharacterViewModel{
         self.character = character
         self.characterService = characterService
         
-        thumbnailURL = URL(string: character.thumbnail.path + "/standard_xlarge." + character.thumbnail.thumbnailExtension)
+        imageURL = URL(string: character.thumbnail.path + "/standard_xlarge." + character.thumbnail.thumbnailExtension)
         
         let nameSplit = character.name.split(separator: "(")
         let firstPart = nameSplit[0].trimmingCharacters(in: .whitespaces)

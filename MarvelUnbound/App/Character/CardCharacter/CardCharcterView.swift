@@ -13,24 +13,16 @@ struct CardCharacterView: View {
     
     var body: some View {
         HStack(spacing: 0){
-            AsyncImage(url: viewModel.thumbnailURL) { image in
-                image
-            } placeholder: {
-                ZStack(alignment: .center){
-                    UnevenRoundedRectangle(topLeadingRadius: 15, bottomLeadingRadius: 15)
-                        .frame(width: 200, height: 200)
-                    
-                    LoadingView(sizeText: 25)
-                }
-            }
-            
+            CharacterImageView(imageURL: viewModel.imageURL)
             VStack(spacing: 5){
-                NameView(nameParts: viewModel.nameParts)
-                DescriptionView(description: viewModel.description)
-                ComicsView(comics: viewModel.comics)
-                ModifiedView(modifiedDate: viewModel.modifiedDate)
+                CharacterNameView(nameParts: viewModel.nameParts)
+                CharacterDescriptionView(description: viewModel.description)
+                CharacterComicsView(comics: viewModel.comics)
+                CharacterModifiedDateView(modifiedDate: viewModel.modifiedDate)
+                
                 Spacer()
-                MoreButton(moreLink: CharacterDetailView(character: viewModel.character, charactersService: viewModel.characterService))
+                
+                MoreButton(moreLink: CharacterDetailView(viewModel: CharacterDetailModel(character: viewModel.character, charactersService: viewModel.characterService)))
                     .padding(.bottom, 5)
                 
 
@@ -44,7 +36,23 @@ struct CardCharacterView: View {
     }
 }
 
-private struct ModifiedView: View {
+private struct CharacterImageView: View {
+    let imageURL: URL?
+    var body: some View {
+        AsyncImage(url: imageURL) { image in
+            image
+        } placeholder: {
+            ZStack(alignment: .center){
+                UnevenRoundedRectangle(topLeadingRadius: 15, bottomLeadingRadius: 15)
+                    .frame(width: 200, height: 200)
+                
+                LoadingView(sizeText: 25)
+            }
+        }
+    }
+}
+
+private struct CharacterModifiedDateView: View {
     let modifiedDate: String
     
     var body: some View {
@@ -53,7 +61,7 @@ private struct ModifiedView: View {
                 .font(Font.customFont(.inter, style: .semiBold, size: 12))
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(modifiedDate)
-                .font(Font.customFont(.inter, style: .light, size: 12))
+                .font(Font.customFont(.inter, style: .light, size: 11))
                 .frame(maxWidth: .infinity, alignment: .leading)
             
         }
@@ -84,7 +92,7 @@ private struct MoreButton: View {
     }
 }
 
-private struct ComicsView: View {
+private struct CharacterComicsView: View {
     let comics: [String]
     
     var body: some View {
@@ -104,7 +112,7 @@ private struct ComicsView: View {
     }
 }
 
-private struct DescriptionView: View {
+private struct CharacterDescriptionView: View {
     let description: String
     
     var body: some View {
@@ -115,7 +123,7 @@ private struct DescriptionView: View {
     }
 }
 
-private struct NameView: View {
+private struct CharacterNameView: View {
     let nameParts: (String, String?)
     
     var body: some View {
