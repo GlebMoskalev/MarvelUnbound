@@ -32,19 +32,9 @@ struct MainCharactersView: View {
                         }
                         
                         if model.charactersService.sortSelection != .popular && !model.characters.isEmpty && !model.isLoadingMore{
-                            Button{
+                            LoadMoreButton(action: {
                                 model.startLoadingCharacters()
-                            } label: {
-                                Text("Load More")
-                                    .foregroundStyle(.white)
-                                    .font(Font.customFont(.inter, style: .medium, size: 15))
-                                    .padding(.horizontal, 15)
-                                    .padding(.vertical, 9)
-                                    .background(.black)
-                                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                
-                            }
+                            })
                         } else if model.isLoadingMore{
                             LoadingView(sizeText: 20)
                                 .frame(maxWidth: .infinity, alignment: .center)

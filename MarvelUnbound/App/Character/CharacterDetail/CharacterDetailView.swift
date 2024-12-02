@@ -76,16 +76,7 @@ private struct CharacterComicsListView: View{
                         Text("This character has not appeared in the comics.")
                             .font(Font.customFont(.inter, style: .light, size: 15))
                     } else if !isLoadingMoreComics && !comics.isEmpty && !isAllComicsUploaded{
-                        Button(action: loadMoreAction){
-                            Text("Load More")
-                                .foregroundStyle(.white)
-                                .font(Font.customFont(.inter, style: .medium, size: 15))
-                                .padding(.horizontal, 15)
-                                .padding(.vertical, 9)
-                                .background(.black)
-                                .clipShape(RoundedRectangle(cornerRadius: 15))
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        }
+                        LoadMoreButton(action: loadMoreAction)
                     } else if isAllComicsUploaded{
                         EmptyView()
                     } else{
