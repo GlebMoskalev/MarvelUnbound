@@ -79,6 +79,9 @@ private struct CharacterComicsListView: View{
                         LoadMoreButton(action: loadMoreAction)
                     } else if isAllComicsUploaded{
                         EmptyView()
+                    } else if comics.isEmpty{
+                        LoadingView(sizeText: 25)
+                            .padding(.leading, UIScreen.main.bounds.width / 4)
                     } else{
                         LoadingView(sizeText: 10)
                     }
