@@ -9,24 +9,24 @@ import SwiftUI
 
 struct CharacterDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @State var viewModel: CharacterDetailModel
+    @State var model: CharacterDetailModel
     
     var body: some View {
         ScrollView{
             VStack(spacing: 0){
-                CharacterImageView(imageURL: viewModel.imageURL)
-                CharacterNameView(nameParts: viewModel.nameParts)
-                CharacterDescriptionView(description: viewModel.description)
+                CharacterImageView(imageURL: model.imageURL)
+                CharacterNameView(nameParts: model.nameParts)
+                CharacterDescriptionView(description: model.description)
                 CharacterComicsListView(
-                    comics: $viewModel.comics,
-                    isNoComics: $viewModel.isNoComics,
-                    isLoadingMoreComics: $viewModel.isLoadingMoreComics,
-                    isAllComicsUploaded: $viewModel.isAllComicsUploaded,
+                    comics: $model.comics,
+                    isNoComics: $model.isNoComics,
+                    isLoadingMoreComics: $model.isLoadingMoreComics,
+                    isAllComicsUploaded: $model.isAllComicsUploaded,
                     loadMoreAction: {
-                        viewModel.isLoadingMoreComics = true
+                        model.isLoadingMoreComics = true
                         Task(priority: .high){
-                            await viewModel.loadComics()
-                            viewModel.isLoadingMoreComics = false
+                            await model.loadComics()
+                            model.isLoadingMoreComics = false
                         }
                     })
             }
@@ -47,7 +47,7 @@ struct CharacterDetailView: View {
         }
         .onAppear{
             Task(priority: .high){
-                await viewModel.loadComics(refresh: true)
+                await model.loadComics(refresh: true)
             }
         }
     }
@@ -156,7 +156,7 @@ private struct CharacterDetail_Preview: View {
             if let character = character {
                 NavigationStack{
                     NavigationLink{
-                        CharacterDetailView(viewModel: CharacterDetailModel(character: character, charactersService: CharactersService()))
+                        CharacterDetailView(model: CharacterDetailModel(character: character, charactersService: CharactersService()))
                     } label: {
                         Text("transition detail")
                     }
