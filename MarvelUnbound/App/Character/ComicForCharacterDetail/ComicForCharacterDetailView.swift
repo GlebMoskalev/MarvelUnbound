@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ComicForCharacterDetailView: View {
-    let comic: Comic
+    @State var model: ComicForCharacterDetailModel
     var body: some View {
         VStack(spacing: 0){
-            AsyncImage(url: URL(string: comic.thumbnail.path + "/portrait_xlarge." + comic.thumbnail.thumbnailExtension)) { image in
+            AsyncImage(url: model.imageURL) { image in
                 image
             } placeholder: {
                 ZStack(alignment: .center){
@@ -22,7 +22,7 @@ struct ComicForCharacterDetailView: View {
                 }
             }
             
-            Text(comic.title)
+            Text(model.title)
                 .font(Font.customFont(.inter, style: .regular, size: 8))
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -37,7 +37,7 @@ private struct ComicForCharacterDetail_Preview: View {
     var body: some View {
         VStack{
             if let comic = comic {
-                ComicForCharacterDetailView(comic: comic)
+                ComicForCharacterDetailView(model: ComicForCharacterDetailModel(comic: comic))
             } else {
                 Text("Loading")
             }

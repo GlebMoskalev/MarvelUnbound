@@ -70,7 +70,7 @@ private struct CharacterComicsListView: View{
             ScrollView(.horizontal, showsIndicators: false){
                 HStack(spacing: 20){
                     ForEach(comics, id: \.id) { comic in
-                        ComicForCharacterDetailView(comic: comic)
+                        ComicForCharacterDetailView(model: ComicForCharacterDetailModel(comic: comic))
                     }
                     if isNoComics && comics.isEmpty{
                         Text("This character has not appeared in the comics.")
