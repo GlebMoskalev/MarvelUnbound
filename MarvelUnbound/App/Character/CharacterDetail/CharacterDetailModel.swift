@@ -44,7 +44,6 @@ class CharacterDetailModel{
         switch response {
         case .success(let success):
             isAllComicsUploaded = success.data.total <= (charactersService.comicsOffset  + charactersService.limit)
-            print(isAllComicsUploaded, success.data.total, charactersService.comicsOffset)
             isNoComics = success.data.count == 0
             let newComics = success.data.results
             DispatchQueue.main.async {

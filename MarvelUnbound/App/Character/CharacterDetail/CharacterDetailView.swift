@@ -50,15 +50,6 @@ struct CharacterDetailView: View {
                 await viewModel.loadComics(refresh: true)
             }
         }
-        .onChange(of: viewModel.isLoadingMoreComics){
-            print("isLoadingMoreComics \(viewModel.isLoadingMoreComics)")
-        }
-        .onChange(of: viewModel.isAllComicsUploaded){
-            print("isAllComicsUploaded \(viewModel.isAllComicsUploaded)")
-        }
-        .onChange(of: viewModel.isNoComics){
-            print("isAllComicsUploaded \(viewModel.isNoComics)")
-        }
     }
 }
 
