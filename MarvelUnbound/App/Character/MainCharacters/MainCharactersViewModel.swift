@@ -8,7 +8,7 @@
 import SwiftUI
 
 @Observable
-class MainCharactersModel {
+class MainCharactersViewModel {
     var characters: [Character] = []
     var charactersService = CharactersService()
     var isLoadingMore = false

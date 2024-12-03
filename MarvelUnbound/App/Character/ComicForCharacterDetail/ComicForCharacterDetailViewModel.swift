@@ -8,7 +8,7 @@
 import SwiftUI
 
 @Observable
-class ComicForCharacterDetailModel{
+class ComicForCharacterDetailViewModel{
     var imageURL: URL?
     var title: String
     

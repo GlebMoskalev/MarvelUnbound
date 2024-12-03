@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-class CharacterDetailModel{
+class CharacterDetailViewModel{
     var comics: [Comic] = []
     var isLoadingMoreComics = false
     var isAllComicsUploaded = false
