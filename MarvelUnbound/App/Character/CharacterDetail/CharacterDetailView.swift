@@ -9,24 +9,24 @@ import SwiftUI
 
 struct CharacterDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @State var model: CharacterDetailModel
+    @State var viewModel: CharacterDetailViewModel
     
     var body: some View {
         ScrollView{
-            VStack(spacing: 0){
-                CharacterImageView(imageURL: model.imageURL)
-                CharacterNameView(nameParts: model.nameParts)
-                CharacterDescriptionView(description: model.description)
+            VStack(spacing: 10){
+                CharacterImageView(imageURL: viewModel.imageURL)
+                CharacterNameView(nameParts: viewModel.nameParts)
+                CharacterDescriptionView(description: viewModel.description)
                 CharacterComicsListView(
-                    comics: $model.comics,
-                    isNoComics: $model.isNoComics,
-                    isLoadingMoreComics: $model.isLoadingMoreComics,
-                    isAllComicsUploaded: $model.isAllComicsUploaded,
+                    comics: $viewModel.comics,
+                    isNoComics: $viewModel.isNoComics,
+                    isLoadingMoreComics: $viewModel.isLoadingMoreComics,
+                    isAllComicsUploaded: $viewModel.isAllComicsUploaded,
                     loadMoreAction: {
-                        model.isLoadingMoreComics = true
+                        viewModel.isLoadingMoreComics = true
                         Task(priority: .high){
-                            await model.loadComics()
-                            model.isLoadingMoreComics = false
+                            await viewModel.loadComics()
+                            viewModel.isLoadingMoreComics = false
                         }
                     })
             }
@@ -47,7 +47,7 @@ struct CharacterDetailView: View {
         }
         .onAppear{
             Task(priority: .high){
-                await model.loadComics(refresh: true)
+                await viewModel.loadComics(refresh: true)
             }
         }
     }
@@ -65,12 +65,11 @@ private struct CharacterComicsListView: View{
             Text("Comics:")
                 .font(Font.customFont(.inter, style: .semiBold, size: 20))
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding([.leading, .top], 20)
             
             ScrollView(.horizontal, showsIndicators: false){
-                HStack(spacing: 20){
+                HStack(spacing: 10){
                     ForEach(comics, id: \.id) { comic in
-                        ComicForCharacterDetailView(model: ComicForCharacterDetailModel(comic: comic))
+                        ComicForCharacterDetailView(viewModel: ComicForCharacterDetailViewModel(comic: comic))
                     }
                     if isNoComics && comics.isEmpty{
                         Text("This character has not appeared in the comics.")
@@ -86,9 +85,9 @@ private struct CharacterComicsListView: View{
                         LoadingView(sizeText: 10)
                     }
                 }
-                .padding(.horizontal, 20)
             }
         }
+        .padding(.horizontal, 10)
     }
 }
 
@@ -112,7 +111,7 @@ private struct CharacterDescriptionView: View {
         Text(description)
             .font(Font.customFont(.inter, style: .regular, size: 15))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(20)
+            .padding(.horizontal, 10)
     }
 }
 
@@ -136,7 +135,7 @@ private struct CharacterNameView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
-        .padding(.leading, 20)
+        .padding(.horizontal, 10)
     }
 }
 
@@ -150,7 +149,7 @@ private struct CharacterDetail_Preview: View {
             if let character = character {
                 NavigationStack{
                     NavigationLink{
-                        CharacterDetailView(model: CharacterDetailModel(character: character, charactersService: CharactersService()))
+                        CharacterDetailView(viewModel: CharacterDetailViewModel(character: character, charactersService: CharactersService()))
                     } label: {
                         Text("transition detail")
                     }
@@ -166,7 +165,7 @@ private struct CharacterDetail_Preview: View {
     }
     
     func getCharacter() async {
-        let response = await charactersService.getEntityById(id: 1009187)
+        let response = await charactersService.getEntityById(id: 1009262)
         switch response{
         case .success(let responseCharacter):
             character = responseCharacter.data.results.first

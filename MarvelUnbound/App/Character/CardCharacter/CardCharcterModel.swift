@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftUI
 
 @Observable
-class CardCharacterModel{
+class CardCharacterViewModel{
     var imageURL: URL?
     var nameParts: (String, String?)
     var description: String

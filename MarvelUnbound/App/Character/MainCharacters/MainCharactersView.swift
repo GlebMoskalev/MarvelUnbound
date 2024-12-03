@@ -8,34 +8,34 @@
 import SwiftUI
 
 struct MainCharactersView: View {
-    @State private var model = MainCharactersModel()
+    @State private var viewModel = MainCharactersViewModel()
     
     var body: some View {
         NavigationStack {
             BackToTopScrollView{ _ in
                 VStack(alignment: .leading, spacing: 20){
                     HeaderView()
-                    SortView(service: $model.charactersService, actionButton: {
-                        model.startLoadingCharacters(refresh: true)
+                    SortView(service: $viewModel.charactersService, actionButton: {
+                        viewModel.startLoadingCharacters(refresh: true)
                     })
                     
-                    if model.characters.isEmpty{
+                    if viewModel.characters.isEmpty{
                         HStack{
                             Spacer()
                             LoadingView(sizeText: 30)
                             Spacer()
                         }.padding(.top, UIScreen.main.bounds.height / 3)
                     } else{
-                        ForEach(model.characters, id: \.id) { character in
-                            CardCharacterView(model: CardCharacterModel(character: character, characterService: model.charactersService))
+                        ForEach(viewModel.characters, id: \.id) { character in
+                            CardCharacterView(viewModel: CardCharacterViewModel(character: character, characterService: viewModel.charactersService))
                                 .frame(maxWidth: .infinity, alignment: .center)
                         }
                         
-                        if model.charactersService.sortSelection != .popular && !model.characters.isEmpty && !model.isLoadingMore{
+                        if viewModel.charactersService.sortSelection != .popular && !viewModel.characters.isEmpty && !viewModel.isLoadingMore{
                             LoadMoreButton(action: {
-                                model.startLoadingCharacters()
+                                viewModel.startLoadingCharacters()
                             })
-                        } else if model.isLoadingMore{
+                        } else if viewModel.isLoadingMore{
                             LoadingView(sizeText: 20)
                                 .frame(maxWidth: .infinity, alignment: .center)
                         }
@@ -44,10 +44,10 @@ struct MainCharactersView: View {
             }
         }
         .onAppear{
-            model.startLoadingCharacters(refresh: true)
+            viewModel.startLoadingCharacters(refresh: true)
         }
         .onDisappear{
-            model.cancelCurrentTask()
+            viewModel.cancelCurrentTask()
         }
     }
 }

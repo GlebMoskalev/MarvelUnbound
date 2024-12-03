@@ -9,20 +9,20 @@
 import SwiftUI
 
 struct CardCharacterView: View {
-    @State var model: CardCharacterModel
+    @State var viewModel: CardCharacterViewModel
     
     var body: some View {
         HStack(spacing: 0){
-            CharacterImageView(imageURL: model.imageURL)
+            CharacterImageView(imageURL: viewModel.imageURL)
             VStack(spacing: 5){
-                CharacterNameView(nameParts: model.nameParts)
-                CharacterDescriptionView(description: model.description)
-                CharacterComicsView(comics: model.comics)
-                CharacterModifiedDateView(modifiedDate: model.modifiedDate)
+                CharacterNameView(nameParts: viewModel.nameParts)
+                CharacterDescriptionView(description: viewModel.description)
+                CharacterComicsView(comics: viewModel.comics)
+                CharacterModifiedDateView(modifiedDate: viewModel.modifiedDate)
                 
                 Spacer()
                 
-                MoreButton(moreLink: CharacterDetailView(model: CharacterDetailModel(character: model.character, charactersService: model.characterService)))
+                MoreButton(moreLink: CharacterDetailView(viewModel: CharacterDetailViewModel(character: viewModel.character, charactersService: viewModel.characterService)))
                     .padding(.bottom, 5)
                 
 
@@ -152,7 +152,7 @@ private struct CardCharacter_Preview: View {
     var body: some View {
         VStack{
             if let character = character {
-                CardCharacterView(model: CardCharacterModel(character: character, characterService: CharactersService()))
+                CardCharacterView(viewModel: CardCharacterViewModel(character: character, characterService: CharactersService()))
             } else {
                 Text("Loading")
             }
